@@ -12,6 +12,8 @@ import matplotlib.pyplot as plt
 (train_features, train_labels), (test_features, test_labels) = cifar10.load_data()
 classes = np.unique(train_labels)
 num_classes= len(classes)
+save_dir = os.path.join(os.getcwd(), 'saved_models')
+model_name = 'keras_cifar10_trained_model.h5'
 
 class_names = ['airplane','automobile','bird','cat','deer',
                'dog','frog','horse','ship','truck']
@@ -68,3 +70,12 @@ model.fit(train_features,train_labels,
               validation_data=(test_features, test_labels),
               shuffle=True)
 
+if not os.path.isdir(save_dir):
+    os.makedirs(save_dir)
+
+model_path = os.path.join(save_dir, model_name)
+model.save(model_path)
+print('Saved trained model at %s ' % model_path)
+scores = model.evaluate(test_features, test_labels, verbose=1)
+print('Test loss:', scores[0])
+print('Test accuracy:', scores[1])
